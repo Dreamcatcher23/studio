@@ -14,12 +14,57 @@ import {
 import { Button } from "@/components/ui/button";
 import { Bookmark, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/language-context";
 
 interface MarketPricesClientProps {
   prices: MarketPrice[];
 }
 
+const translations = {
+  searchPlaceholder: {
+    en: "Search by crop or market...",
+    hi: "फसल या बाजार द्वारा खोजें...",
+    kn: "ಬೆಳೆ ಅಥವಾ ಮಾರುಕಟ್ಟೆಯ ಮೂಲಕ ಹುಡುಕಿ...",
+  },
+  crop: {
+    en: "Crop",
+    hi: "फसल",
+    kn: "ಬೆಳೆ",
+  },
+  market: {
+    en: "Market",
+    hi: "बाजार",
+    kn: "ಮಾರುಕಟ್ಟೆ",
+  },
+  state: {
+    en: "State",
+    hi: "राज्य",
+    kn: "ರಾಜ್ಯ",
+  },
+  price: {
+    en: "Price (per quintal)",
+    hi: "मूल्य (प्रति क्विंटल)",
+    kn: "ಬೆಲೆ (ಪ್ರತಿ ಕ್ವಿಂಟಲ್‌ಗೆ)",
+  },
+  action: {
+    en: "Action",
+    hi: "कार्रवाई",
+    kn: "ಕ್ರಿಯೆ",
+  },
+  bookmark: {
+    en: "Bookmark",
+    hi: "बुकमार्क",
+    kn: "ಬುಕ್‌ಮಾರ್ಕ್",
+  },
+  noPrices: {
+    en: "No prices found.",
+    hi: "कोई मूल्य नहीं मिला।",
+    kn: "ಯಾವುದೇ ಬೆಲೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+  },
+};
+
 export function MarketPricesClient({ prices }: MarketPricesClientProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
 
@@ -48,7 +93,7 @@ export function MarketPricesClient({ prices }: MarketPricesClientProps) {
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="Search by crop or market..."
+                        placeholder={t(translations.searchPlaceholder)}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10"
@@ -60,11 +105,11 @@ export function MarketPricesClient({ prices }: MarketPricesClientProps) {
                 <Table>
                 <TableHeader>
                     <TableRow>
-                    <TableHead>Crop</TableHead>
-                    <TableHead className="hidden md:table-cell">Market</TableHead>
-                    <TableHead className="hidden sm:table-cell">State</TableHead>
-                    <TableHead>Price (per quintal)</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
+                    <TableHead>{t(translations.crop)}</TableHead>
+                    <TableHead className="hidden md:table-cell">{t(translations.market)}</TableHead>
+                    <TableHead className="hidden sm:table-cell">{t(translations.state)}</TableHead>
+                    <TableHead>{t(translations.price)}</TableHead>
+                    <TableHead className="text-right">{t(translations.action)}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -81,7 +126,7 @@ export function MarketPricesClient({ prices }: MarketPricesClientProps) {
                             <TableCell className="text-right">
                                 <Button variant="ghost" size="icon" onClick={() => toggleBookmark(price.id)} >
                                     <Bookmark className={`h-4 w-4 ${bookmarked.has(price.id) ? 'fill-accent text-accent' : ''}`} />
-                                    <span className="sr-only">Bookmark</span>
+                                    <span className="sr-only">{t(translations.bookmark)}</span>
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -89,7 +134,7 @@ export function MarketPricesClient({ prices }: MarketPricesClientProps) {
                     ) : (
                         <TableRow>
                             <TableCell colSpan={5} className="h-24 text-center">
-                                No prices found.
+                                {t(translations.noPrices)}
                             </TableCell>
                         </TableRow>
                     )}
