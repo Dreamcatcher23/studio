@@ -73,8 +73,7 @@ const prompt = ai.definePrompt({
   Based on your analysis, provide a list of possible diseases, their confidence levels, and recommendations for addressing them.
 
   Crop Description: {{{description}}}
-  Crop Image: {{media url=photoDataUri}}
-  Current Date: {{await getCurrentDate}}`
+  Crop Image: {{media url=photoDataUri}}`
 });
 
 const analyzeCropImageForDiseaseFlow = ai.defineFlow(
