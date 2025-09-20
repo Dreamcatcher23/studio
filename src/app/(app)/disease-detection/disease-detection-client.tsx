@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { analyzeCropImageForDisease, type AnalyzeCropImageForDiseaseOutput } from '@/ai/flows/analyze-crop-image-for-disease';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState, useActionState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle, Info, Loader2, Sparkles, UploadCloud, X } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -67,7 +67,7 @@ export function DiseaseDetectionClient() {
         }
     }
 
-    const [state, formAction] = useFormState(analyzeAction, initialState);
+    const [state, formAction] = useActionState(analyzeAction, initialState);
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
