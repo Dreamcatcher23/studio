@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/nav-links";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function AppHeader() {
   const pathname = usePathname();
@@ -27,18 +28,16 @@ export function AppHeader() {
         <h1 className="text-xl font-semibold">{currentPage?.label || 'Krishi Sahayak'}</h1>
       </div>
 
-      <div className="ml-auto flex items-center gap-2 rounded-full border bg-muted p-1">
-        {languages.map((lang) => (
-            <Button
-                key={lang.code}
-                variant={language === lang.code ? "default" : "ghost"}
-                size="sm"
-                className={cn("rounded-full", language === lang.code ? "bg-primary text-primary-foreground" : "")}
-                onClick={() => setLanguage(lang.code)}
-            >
+      <div className="ml-auto flex items-center">
+        <Tabs value={language} onValueChange={setLanguage} className="w-full">
+          <TabsList>
+            {languages.map((lang) => (
+              <TabsTrigger key={lang.code} value={lang.code}>
                 {lang.name}
-            </Button>
-        ))}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
     </header>
   );
