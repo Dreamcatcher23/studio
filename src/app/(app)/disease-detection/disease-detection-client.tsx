@@ -45,47 +45,28 @@ const translations = {
   pleaseUploadImage: { en: 'Please upload an image.', hi: 'कृपया एक छवि अपलोड करें।', kn: 'ದಯವಿಟ್ಟು ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.' },
 };
 
-async function analyzeAction(
-    prevState: FormState,
-    formData: FormData
-): Promise<FormState> {
-    const photoDataUri = formData.get('photoDataUri') as string;
-    const description = formData.get('description') as string;
-
-    if (!photoDataUri || !description) {
-        return { result: null, error: "Please provide both an image and a description." };
-    }
-
-    try {
-        const result = await analyzeCropImageForDisease({ photoDataUri, description });
-        return { result, error: null };
-    } catch (e: any) {
-        return { result: null, error: e.message || "An unknown error occurred." };
-    }
-}
-
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    const { t } = useLanguage();
-    return (
-        <Button type="submit" disabled={pending} className="w-full sm:w-auto">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t(translations.analyzing)}
-                </>
-            ) : (
-                <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    {t(translations.analyzeCrop)}
-                </>
-            )}
-        </Button>
-    );
-}
-
 export function DiseaseDetectionClient() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
+    
+    const analyzeAction = async (
+        prevState: FormState,
+        formData: FormData
+    ): Promise<FormState> => {
+        const photoDataUri = formData.get('photoDataUri') as string;
+        const description = formData.get('description') as string;
+
+        if (!photoDataUri || !description) {
+            return { result: null, error: "Please provide both an image and a description." };
+        }
+
+        try {
+            const result = await analyzeCropImageForDisease({ photoDataUri, description, language });
+            return { result, error: null };
+        } catch (e: any) {
+            return { result: null, error: e.message || "An unknown error occurred." };
+        }
+    }
+
     const [state, formAction] = useFormState(analyzeAction, initialState);
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -106,6 +87,25 @@ export function DiseaseDetectionClient() {
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
+    }
+
+    function SubmitButton() {
+        const { pending } = useFormStatus();
+        return (
+            <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+                {pending ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t(translations.analyzing)}
+                    </>
+                ) : (
+                    <>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        {t(translations.analyzeCrop)}
+                    </>
+                )}
+            </Button>
+        );
     }
 
     return (

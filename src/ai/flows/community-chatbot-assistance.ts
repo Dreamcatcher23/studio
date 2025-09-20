@@ -13,6 +13,7 @@ import {z} from 'genkit';
 
 const CommunityChatbotAssistanceInputSchema = z.object({
   query: z.string().describe('The question or query from the farmer.'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type CommunityChatbotAssistanceInput = z.infer<typeof CommunityChatbotAssistanceInputSchema>;
 
@@ -30,6 +31,8 @@ const prompt = ai.definePrompt({
   input: {schema: CommunityChatbotAssistanceInputSchema},
   output: {schema: CommunityChatbotAssistanceOutputSchema},
   prompt: `You are a helpful AI chatbot assisting farmers with their questions.
+
+  IMPORTANT: You MUST respond in the language specified by the following code: {{{language}}}.
 
   Respond to the following query:
 

@@ -63,13 +63,14 @@ export function ChatClient() {
       role: "assistant",
       content: t(translations.initialMessage),
     },
-  ], [language]);
+  ], [language, t]);
 
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Reset to initial message when language changes
     setMessages(initialMessages);
   }, [initialMessages]);
 
@@ -81,7 +82,7 @@ export function ChatClient() {
     formRef.current?.reset();
     
     try {
-      const result = await communityChatbotAssistance({ query });
+      const result = await communityChatbotAssistance({ query, language });
       setMessages((prev) => [...prev, { role: "assistant", content: result.response }]);
     } catch (e: any) {
       setMessages((prev) => [...prev, { role: "assistant", content: `${t(translations.submitError)} ${e.message}` }]);

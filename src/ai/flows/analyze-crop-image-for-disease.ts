@@ -17,6 +17,7 @@ const AnalyzeCropImageForDiseaseInputSchema = z.object({
       "A photo of a crop, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   description: z.string().describe('The description of the crop.'),
+  language: z.string().describe('The language for the response (e.g., "en", "hi", "kn").'),
 });
 export type AnalyzeCropImageForDiseaseInput = z.infer<typeof AnalyzeCropImageForDiseaseInputSchema>;
 
@@ -71,6 +72,8 @@ const prompt = ai.definePrompt({
   Incorporate the current date (using the getCurrentDate tool) to consider seasonal disease patterns and weather-related factors that might influence the diagnosis.
 
   Based on your analysis, provide a list of possible diseases, their confidence levels, and recommendations for addressing them.
+  
+  IMPORTANT: All parts of your response, including disease names and recommendations, MUST be in the language specified by the following code: {{{language}}}.
 
   Crop Description: {{{description}}}
   Crop Image: {{media url=photoDataUri}}`
