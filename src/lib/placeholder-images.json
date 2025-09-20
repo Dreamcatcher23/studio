@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "crop-1",
+      "description": "A healthy green crop field under a blue sky.",
+      "imageUrl": "https://picsum.photos/seed/crop1/600/400",
+      "imageHint": "crop field"
+    },
+    {
+      "id": "market-1",
+      "description": "A bustling farmers market with fresh produce.",
+      "imageUrl": "https://picsum.photos/seed/market1/600/400",
+      "imageHint": "farmers market"
+    }
+  ]
 }
