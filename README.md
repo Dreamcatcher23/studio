@@ -69,6 +69,3 @@ To get started, take a look at src/app/page.tsx.
 **AI:** Gemini API
 **Extras:** Weather API, Voice APIs (future)
 
----
-
-Do you want me to also **add a simple architecture diagram** (boxes + arrows) showing how **farmer → app → Firebase → Gemini API** works? That could really impress hackathon judges.
