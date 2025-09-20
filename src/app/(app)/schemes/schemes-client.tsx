@@ -12,12 +12,47 @@ import {
 import { Button } from "@/components/ui/button";
 import { Search, FileText, CheckCircle, ExternalLink, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/language-context";
 
 interface SchemesClientProps {
   schemes: GovernmentScheme[];
 }
 
+const translations = {
+  searchPlaceholder: {
+    en: "Search for schemes...",
+    hi: "योजनाओं के लिए खोजें...",
+    kn: "ಯೋಜನೆಗಳಿಗಾಗಿ ಹುಡುಕಿ...",
+  },
+  deadline: {
+    en: "Deadline",
+    hi: "समयसीमा",
+    kn: "ಗಡುವು",
+  },
+  eligibility: {
+    en: "Eligibility",
+    hi: "पात्रता",
+    kn: "ಅರ್ಹತೆ",
+  },
+  documents: {
+    en: "Documents Required",
+    hi: "आवश्यक दस्तावेज़",
+    kn: "ಅಗತ್ಯವಿರುವ ದಾಖಲೆಗಳು",
+  },
+  applyNow: {
+    en: "Apply Now",
+    hi: "अभी आवेदन करें",
+    kn: "ಈಗಲೇ ಅನ್ವಯಿಸಿ",
+  },
+  noSchemes: {
+    en: "No schemes found matching your search.",
+    hi: "आपकी खोज से मेल खाने वाली कोई योजना नहीं मिली।",
+    kn: "ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಹೊಂದುವ ಯಾವುದೇ ಯೋಜನೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+  },
+};
+
 export function SchemesClient({ schemes }: SchemesClientProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredSchemes = schemes.filter((scheme) =>
@@ -29,7 +64,7 @@ export function SchemesClient({ schemes }: SchemesClientProps) {
         <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-                placeholder="Search for schemes..."
+                placeholder={t(translations.searchPlaceholder)}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -45,7 +80,7 @@ export function SchemesClient({ schemes }: SchemesClientProps) {
                                 <span className="font-semibold text-base">{scheme.name}</span>
                                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
                                     <Calendar className="h-4 w-4 text-muted-foreground"/>
-                                    <span className="text-xs text-muted-foreground">Deadline: {scheme.deadline !== 'N/A' ? new Date(scheme.deadline).toLocaleDateString() : 'N/A'}</span>
+                                    <span className="text-xs text-muted-foreground">{t(translations.deadline)}: {scheme.deadline !== 'N/A' ? new Date(scheme.deadline).toLocaleDateString() : 'N/A'}</span>
                                 </div>
                             </div>
                         </AccordionTrigger>
@@ -53,11 +88,11 @@ export function SchemesClient({ schemes }: SchemesClientProps) {
                             <p>{scheme.description}</p>
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <h4 className="font-semibold flex items-center text-card-foreground"><CheckCircle className="h-4 w-4 mr-2 text-primary" />Eligibility</h4>
+                                    <h4 className="font-semibold flex items-center text-card-foreground"><CheckCircle className="h-4 w-4 mr-2 text-primary" />{t(translations.eligibility)}</h4>
                                     <p className="text-sm">{scheme.eligibility}</p>
                                 </div>
                                 <div className="space-y-2">
-                                    <h4 className="font-semibold flex items-center text-card-foreground"><FileText className="h-4 w-4 mr-2 text-primary" />Documents Required</h4>
+                                    <h4 className="font-semibold flex items-center text-card-foreground"><FileText className="h-4 w-4 mr-2 text-primary" />{t(translations.documents)}</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {scheme.documents.map((doc, index) => (
                                             <Badge variant="secondary" key={index}>{doc}</Badge>
@@ -67,7 +102,7 @@ export function SchemesClient({ schemes }: SchemesClientProps) {
                             </div>
                             <Button asChild className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90">
                                 <a href={scheme.applicationLink} target="_blank" rel="noopener noreferrer">
-                                    Apply Now
+                                    {t(translations.applyNow)}
                                     <ExternalLink className="h-4 w-4 ml-2" />
                                 </a>
                             </Button>
@@ -77,7 +112,7 @@ export function SchemesClient({ schemes }: SchemesClientProps) {
             </Accordion>
         ) : (
             <div className="text-center text-muted-foreground p-8 bg-card rounded-lg">
-                No schemes found matching your search.
+                {t(translations.noSchemes)}
             </div>
         )}
     </div>

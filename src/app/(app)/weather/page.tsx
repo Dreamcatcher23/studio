@@ -1,7 +1,10 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { mockWeatherForecast, mockExtremeWeatherAlert } from "@/lib/mock-data";
 import { CloudSun, Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, AlertTriangle } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
 
 const WeatherIcon = ({ condition, className }: { condition: string, className?: string }) => {
     switch (condition) {
@@ -13,8 +16,48 @@ const WeatherIcon = ({ condition, className }: { condition: string, className?: 
     }
 };
 
+const translations = {
+  title: {
+    en: "Hyper-local Weather Forecast",
+    hi: "अति-स्थानीय मौसम पूर्वानुमान",
+    kn: "ಹೈಪರ್-ಲೋಕಲ್ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
+  },
+  description: {
+    en: "Stay updated with the latest weather conditions and alerts for your area.",
+    hi: "अपने क्षेत्र के लिए नवीनतम मौसम की स्थिति और अलर्ट से अपडेट रहें।",
+    kn: "ನಿಮ್ಮ ಪ್ರದೇಶಕ್ಕಾಗಿ ಇತ್ತೀಚಿನ ಹವಾಮಾನ ಪರಿಸ್ಥಿತಿಗಳು ಮತ್ತು ಎಚ್ಚರಿಕೆಗಳೊಂದಿಗೆ ನವೀಕೃತರಾಗಿರಿ.",
+  },
+  currentWeather: {
+    en: "Current Weather",
+    hi: "वर्तमान मौसम",
+    kn: "ಪ್ರಸ್ತುತ ಹವಾಮಾನ",
+  },
+  sevenDayForecast: {
+    en: "7-Day Forecast",
+    hi: "7-दिन का पूर्वानुमान",
+    kn: "7-ದಿನದ ಮುನ್ಸೂಚನೆ",
+  },
+  // Days of the week
+  Today: { en: 'Today', hi: 'आज', kn: 'ಇಂದು' },
+  Fri: { en: 'Fri', hi: 'शुक्र', kn: 'ಶುಕ್ರ' },
+  Sat: { en: 'Sat', hi: 'शनि', kn: 'ಶನಿ' },
+  Sun: { en: 'Sun', hi: 'रवि', kn: 'ಭಾನು' },
+  Mon: { en: 'Mon', hi: 'सोम', kn: 'ಸೋಮ' },
+  Tue: { en: 'Tue', hi: 'मंगल', kn: 'ಮಂಗಳ' },
+  Wed: { en: 'Wed', hi: 'बुध', kn: 'ಬುಧ' },
+};
+
 export default function WeatherPage() {
+    const { t } = useLanguage();
     const currentWeather = mockWeatherForecast[0];
+
+    const getDayTranslation = (day: string) => {
+        const dayKey = day as keyof typeof translations;
+        if (translations[dayKey]) {
+            return t(translations[dayKey] as { en: string; hi: string; kn: string });
+        }
+        return day;
+    }
 
     return (
         <div className="space-y-6">
@@ -23,8 +66,8 @@ export default function WeatherPage() {
                     <div className="flex items-center gap-4">
                         <CloudSun className="h-8 w-8 text-primary" />
                         <div>
-                            <CardTitle>Hyper-local Weather Forecast</CardTitle>
-                            <CardDescription>Stay updated with the latest weather conditions and alerts for your area.</CardDescription>
+                            <CardTitle>{t(translations.title)}</CardTitle>
+                            <CardDescription>{t(translations.description)}</CardDescription>
                         </div>
                     </div>
                 </CardHeader>
@@ -41,8 +84,8 @@ export default function WeatherPage() {
             <div className="grid gap-6 md:grid-cols-3">
                 <Card className="md:col-span-1">
                     <CardHeader>
-                        <CardTitle>Current Weather</CardTitle>
-                        <CardDescription>{currentWeather.day}, {currentWeather.date}</CardDescription>
+                        <CardTitle>{t(translations.currentWeather)}</CardTitle>
+                        <CardDescription>{getDayTranslation(currentWeather.day)}, {currentWeather.date}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center justify-center space-y-4">
                         <WeatherIcon condition={currentWeather.condition} className="h-24 w-24 text-accent" />
@@ -63,7 +106,7 @@ export default function WeatherPage() {
                 
                 <Card className="md:col-span-2">
                     <CardHeader>
-                        <CardTitle>7-Day Forecast</CardTitle>
+                        <CardTitle>{t(translations.sevenDayForecast)}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
@@ -72,7 +115,7 @@ export default function WeatherPage() {
                                     <div className="flex items-center gap-4">
                                         <WeatherIcon condition={forecast.condition} className="h-8 w-8 text-muted-foreground" />
                                         <div>
-                                            <p className="font-semibold">{forecast.day}</p>
+                                            <p className="font-semibold">{getDayTranslation(forecast.day)}</p>
                                             <p className="text-sm text-muted-foreground">{forecast.condition}</p>
                                         </div>
                                     </div>

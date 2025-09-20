@@ -1,49 +1,77 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { communityChatbotAssistance } from "@/ai/flows/community-chatbot-assistance";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { SendHorizonal, Bot, User, Sparkles, Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { SendHorizonal, Bot, User, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { useLanguage } from "@/contexts/language-context";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
-type ChatState = {
-  messages: Message[];
-  error: string | null;
-};
-
-const initialState: ChatState = {
-  messages: [
-    {
-      role: "assistant",
-      content: "Hello! I am your AI farming assistant. How can I help you today?",
-    },
-  ],
-  error: null,
+const translations = {
+  initialMessage: {
+    en: "Hello! I am your AI farming assistant. How can I help you today?",
+    hi: "नमस्ते! मैं आपका एआई खेती सहायक हूँ। मैं आज आपकी कैसे मदद कर सकता हूँ?",
+    kn: "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ AI ಕೃಷಿ ಸಹಾಯಕ. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
+  },
+  submitError: {
+    en: "Sorry, an error occurred:",
+    hi: "क्षमा करें, एक त्रुटि हुई:",
+    kn: "ಕ್ಷಮಿಸಿ, ದೋಷವೊಂದು ಸಂಭವಿಸಿದೆ:",
+  },
+  thinking: {
+    en: "Thinking...",
+    hi: "सोच रहा हूँ...",
+    kn: "ಆಲೋಚಿಸುತ್ತಿದ್ದೇನೆ...",
+  },
+  placeholder: {
+    en: "Ask a question...",
+    hi: "एक प्रश्न पूछें...",
+    kn: "ಒಂದು ಪ್ರಶ್ನೆ ಕೇಳಿ...",
+  },
+  send: {
+    en: "Send",
+    hi: "भेजें",
+    kn: "ಕಳುಹಿಸು",
+  }
 };
 
 function SubmitButton() {
     const { pending } = useFormStatus();
+    const { t } = useLanguage();
     return (
         <Button type="submit" size="icon" disabled={pending} className="shrink-0">
             {pending ? <Loader2 className="h-5 w-5 animate-spin" /> : <SendHorizonal className="h-5 w-5" />}
-            <span className="sr-only">Send</span>
+            <span className="sr-only">{t(translations.send)}</span>
         </Button>
     );
 }
 
 export function ChatClient() {
-  const [messages, setMessages] = useState<Message[]>(initialState.messages);
+  const { t, language } = useLanguage();
+  
+  const initialMessages = useMemo<Message[]>(() => [
+    {
+      role: "assistant",
+      content: t(translations.initialMessage),
+    },
+  ], [language]);
+
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages]);
 
   const formAction = async (formData: FormData) => {
     const query = formData.get('query') as string;
@@ -56,7 +84,7 @@ export function ChatClient() {
       const result = await communityChatbotAssistance({ query });
       setMessages((prev) => [...prev, { role: "assistant", content: result.response }]);
     } catch (e: any) {
-      setMessages((prev) => [...prev, { role: "assistant", content: `Sorry, an error occurred: ${e.message}` }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: `${t(translations.submitError)} ${e.message}` }]);
     }
   };
   
@@ -115,7 +143,7 @@ export function ChatClient() {
                     </Avatar>
                     <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted flex items-center gap-2">
                         <Loader2 className="w-4 h-4 animate-spin"/>
-                        <span>Thinking...</span>
+                        <span>{t(translations.thinking)}</span>
                     </div>
                 </div>
             )}
@@ -124,7 +152,7 @@ export function ChatClient() {
         <form ref={formRef} action={formAction} className="flex items-center gap-2 border-t pt-4">
           <Input
             name="query"
-            placeholder="Ask a question..."
+            placeholder={t(translations.placeholder)}
             autoComplete="off"
             className="flex-1"
             required
