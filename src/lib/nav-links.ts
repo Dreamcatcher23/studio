@@ -14,59 +14,63 @@ import {
 
 export type NavLink = {
   href: string;
-  label: string;
+  label: {
+    en: string;
+    hi: string;
+    kn: string;
+  };
   icon: LucideIcon;
 };
 
 export const navLinks: NavLink[] = [
   {
     href: '/dashboard',
-    label: 'Dashboard',
+    label: { en: 'Dashboard', hi: 'डैशबोर्ड', kn: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್' },
     icon: LayoutDashboard,
   },
   {
     href: '/disease-detection',
-    label: 'Disease Detection',
+    label: { en: 'Disease Detection', hi: 'रोग पहचान', kn: 'ರೋಗ ಪತ್ತೆ' },
     icon: TestTube2,
   },
   {
     href: '/market-prices',
-    label: 'Market Prices',
+    label: { en: 'Market Prices', hi: 'बाजार मूल्य', kn: 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು' },
     icon: LineChart,
   },
   {
     href: '/schemes',
-    label: 'Govt. Schemes',
+    label: { en: 'Govt. Schemes', hi: 'सरकारी योजनाएं', kn: 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು' },
     icon: Landmark,
   },
   {
     href: '/weather',
-    label: 'Weather',
+    label: { en: 'Weather', hi: 'मौसम', kn: 'ಹವಾಮಾನ' },
     icon: CloudSun,
   },
   {
     href: '/soil-health',
-    label: 'Soil Health',
+    label: { en: 'Soil Health', hi: 'मृदा स्वास्थ्य', kn: 'ಮಣ್ಣಿನ ಆರೋಗ್ಯ' },
     icon: Leaf,
   },
   {
     href: '/calendar',
-    label: 'Crop Calendar',
+    label: { en: 'Crop Calendar', hi: 'फसल कैलेंडर', kn: 'ಬೆಳೆ ಕ್ಯಾಲೆండర్' },
     icon: Calendar,
   },
   {
     href: '/community',
-    label: 'Community Chat',
+    label: { en: 'Community Chat', hi: 'सामुदायिक चैट', kn: 'ಸಮುದಾಯ ಚಾಟ್' },
     icon: Users,
   },
   {
     href: '/marketplace',
-    label: 'Marketplace',
+    label: { en: 'Marketplace', hi: 'बाजार', kn: 'ಮಾರುಕಟ್ಟೆ' },
     icon: Store,
   },
   {
     href: '/finance-tools',
-    label: 'Finance Tools',
+    label: { en: 'Finance Tools', hi: 'वित्त उपकरण', kn: 'ಹಣಕಾಸು ಪರಿಕರಗಳು' },
     icon: Calculator,
   },
 ];

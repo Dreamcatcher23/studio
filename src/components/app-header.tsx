@@ -1,19 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/nav-links";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLanguage } from "@/contexts/language-context";
+
+type Language = 'en' | 'hi' | 'kn';
 
 export function AppHeader() {
   const pathname = usePathname();
+  const { language, setLanguage, t } = useLanguage();
+  
   const currentPage = navLinks.find((link) => link.href === pathname);
-  const [language, setLanguage] = useState("en");
+  const currentPageLabel = currentPage ? t(currentPage.label) : 'Krishi Sahayak';
 
-  const languages = [
+  const languages: { code: Language; name: string }[] = [
     { code: "en", name: "English" },
     { code: "hi", name: "हिन्दी" },
     { code: "kn", name: "ಕನ್ನಡ" },
@@ -25,11 +27,11 @@ export function AppHeader() {
         <div className="md:hidden">
             <SidebarTrigger />
         </div>
-        <h1 className="text-xl font-semibold">{currentPage?.label || 'Krishi Sahayak'}</h1>
+        <h1 className="text-xl font-semibold">{currentPageLabel}</h1>
       </div>
 
       <div className="ml-auto flex items-center">
-        <Tabs value={language} onValueChange={setLanguage} className="w-full">
+        <Tabs value={language} onValueChange={(value) => setLanguage(value as Language)} className="w-full">
           <TabsList>
             {languages.map((lang) => (
               <TabsTrigger key={lang.code} value={lang.code}>

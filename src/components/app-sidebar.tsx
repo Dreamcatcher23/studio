@@ -12,9 +12,11 @@ import { Sprout } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/nav-links";
+import { useLanguage } from "@/contexts/language-context";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <Sidebar>
@@ -31,11 +33,11 @@ export function AppSidebar() {
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith(link.href)}
-                tooltip={link.label}
+                tooltip={t(link.label)}
               >
                 <Link href={link.href}>
                   <link.icon />
-                  <span>{link.label}</span>
+                  <span>{t(link.label)}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
